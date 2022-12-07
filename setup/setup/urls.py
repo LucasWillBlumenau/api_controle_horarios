@@ -15,5 +15,5 @@ urlpatterns = [
     path('api/collaborator-detail/<int:id>/', CollaboratorDetails.as_view()),
     path('api/collaborator-detail/', CollaboratorDetails.as_view()),
     path('api/register-user/', UserViewSet.as_view()),
-    path('api/logs', LogViewSet.as_view())
+    path('api/logs/', LogViewSet.as_view())
 ]

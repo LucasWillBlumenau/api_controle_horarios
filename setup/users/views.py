@@ -11,11 +11,25 @@ from .serializers import JobSerializer, CollaboratorSerializer, UserSerializer
 from logs.models import Log
 
 
-class CollaboratorViewSet(CreateAPIView):
+class CollaboratorViewSet(APIView):
 
     serializer_class = CollaboratorSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAdminUser, )
+
+    def post(self, request):
+        serializer = CollaboratorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            log = Log(
+                log_type=0, 
+                    user=request.user, 
+                    collaborator=[serializer.data['firstname'], 
+                    serializer.data['cpf']]
+                )
+            log.save()
+            return Response(status=201)
+        return Response(status=401)
 
 class JobViewSet(CreateAPIView):
 
