@@ -7,7 +7,7 @@ class CollaboratorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Collaborator
-        fields = '__all__'
+        fields = ['firstname', 'lastname', 'age', 'cpf', 'date_of_birth', 'working_hours', 'job', 'user']
 
 class JobSerializer(serializers.ModelSerializer):
 

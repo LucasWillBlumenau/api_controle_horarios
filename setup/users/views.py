@@ -13,11 +13,9 @@ from logs.models import Log
 
 class CollaboratorViewSet(CreateAPIView):
 
-    queryset = Collaborator.objects.all()
     serializer_class = CollaboratorSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAdminUser, )
-
 
 class JobViewSet(CreateAPIView):
 
@@ -42,8 +40,11 @@ class CollaboratorDetails(APIView):
 
     def get(self, request, id):  
         try:
-            collaborator_details = get_object_or_404(Collaborator, id=id)
-        except Exception:
+            collaborator_details = Collaborator.objects.get(id=id)
+        except Collaborator.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            print(e)
             return Response(status=500)
 
         serializer = CollaboratorSerializer(collaborator_details)
