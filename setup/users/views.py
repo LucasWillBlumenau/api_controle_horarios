@@ -1,8 +1,6 @@
-from django.shortcuts import get_object_or_404
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.contrib.auth.models import User
@@ -31,6 +29,7 @@ class CollaboratorViewSet(APIView):
             return Response(status=201)
         return Response(status=401)
 
+
 class JobViewSet(CreateAPIView):
 
     queryset = Job.objects.all()
@@ -47,12 +46,21 @@ class UserViewSet(CreateAPIView):
     permission_classes = (IsAdminUser, )
 
 
+class CollaboratorsDetails(ListAPIView):
+
+    queryset = Collaborator.objects.all()
+    serializer_class = CollaboratorSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAdminUser, )
+    
+
 class CollaboratorDetails(APIView):
 
+    serializer_class = CollaboratorSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, id):  
+    def get(self, request, id):
         try:
             collaborator_details = Collaborator.objects.get(id=id)
         except Collaborator.DoesNotExist:
@@ -75,3 +83,16 @@ class CollaboratorDetails(APIView):
         except Exception:
             return Response(status=500)
         return Response({'status': 'collaborator deleted sucesfully'})
+
+    def put(self, request, id):
+        try:
+            collaborator = Collaborator.objects.get(id=id)
+            serializer = CollaboratorSerializer(collaborator, data=request.data)
+        except Collaborator.DoesNotExits:
+            return Response(status=404)
+        if not serializer.is_valid():
+            return Response(status=400)
+        serializer.save()
+        log = Log(log_type=1, user=request.user, collaborator=[collaborator.firstname, collaborator.cpf])
+        log.save()
+        return Response(serializer.data, status=200)

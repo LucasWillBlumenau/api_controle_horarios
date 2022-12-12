@@ -21,5 +21,5 @@ class Collaborator(models.Model):
     date_of_birth = models.DateField(null=False)
     working_hours = models.CharField(max_length=15, null=False)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, unique=True, on_delete=models.CASCADE)
 

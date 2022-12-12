@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from users.views import JobViewSet, CollaboratorViewSet, CollaboratorDetails, UserViewSet
+from users.views import JobViewSet, CollaboratorViewSet, CollaboratorDetails, UserViewSet , CollaboratorsDetails
 from clock.views import ClockViewSet, PunchInfoView
 from logs.views import LogViewSet
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path('api/register-job/', JobViewSet.as_view()),
     path('api/register-collaborator/', CollaboratorViewSet.as_view()),
     path('api/collaborator-detail/<int:id>/', CollaboratorDetails.as_view()),
-    path('api/collaborator-detail/', CollaboratorDetails.as_view()),
+    path('api/collaborator-detail/', CollaboratorsDetails.as_view()),
     path('api/register-user/', UserViewSet.as_view()),
     path('api/logs/', LogViewSet.as_view())
 ]

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Log
+from users.serializers import UserSerializer
 
 
 class LogSerializer(serializers.ModelSerializer):
@@ -14,4 +15,5 @@ class LogSerializer(serializers.ModelSerializer):
             if x[0] == instance.log_type:
                 representation['log_type'] = x[1]
                 break
+        representation['user'] = UserSerializer(instance.user).data
         return representation
